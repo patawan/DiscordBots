@@ -5,6 +5,7 @@ import aiohttp
 import requests
 from datetime import date
 import re
+import asyncio
 
 
 def generate_url(base_url="https://www.gocomics.com/heathcliff") -> str:
@@ -44,4 +45,4 @@ async def post_to_discord(url_to_post):
 def post_new_comic(event, context):
     comic_url = generate_url()
     todays_image = get_new_comic(comic_url)
-    post_to_discord(todays_image)
+    asyncio(post_to_discord(todays_image))
