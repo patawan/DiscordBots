@@ -50,8 +50,8 @@ def get_discord_token():
         raise e
 
     # Decrypts secret using the associated KMS key.
-    secret_dict = dict(get_secret_value_response["SecretString"])
-    return secret_dict["HEATHBOT_TOKEN"]
+    secret = get_secret_value_response["SecretString"]["HEATHBOT_TOKEN"]
+    return secret
 
 
 async def post_to_discord(token, url_to_post):
