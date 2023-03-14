@@ -59,6 +59,7 @@ async def post_to_discord(token, url_to_post):
     intents = discord.Intents.default()
     client = discord.Client(intents=intents)
     await client.login(token=token)
+    await client.wait_until_ready()
     channel = client.get_channel(12324234183172)
     async with aiohttp.ClientSession() as session:
         async with session.get(url_to_post) as resp:
