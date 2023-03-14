@@ -30,6 +30,9 @@ class HeathbotStack(Stack):
                 iam.ManagedPolicy.from_aws_managed_policy_name(
                     "service-role/AWSLambdaBasicExecutionRole"
                 ),
+                iam.ManagedPolicy.from_aws_managed_policy_name(
+                    "SecretsManagerReadWrite"
+                ),
             ],
         )
 
