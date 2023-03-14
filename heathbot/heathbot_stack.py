@@ -4,7 +4,7 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_iam as iam,
     aws_events as events,
-    aws_events_targets as events_targets,
+    aws_events_targets as event_targets,
 )
 from constructs import Construct
 import configparser
@@ -47,9 +47,9 @@ class HeathbotStack(Stack):
         )
 
         # # lambda on cron to post daily
-        # modeling_lambda_rule = events.Rule(
-        #     scope=self,
-        #     id="modeling-lambda-rule",
-        #     schedule=events.Schedule.cron(minute="0", hour="0"),
-        #     targets=[event_targets.LambdaFunction(handler=heathbot_lambda)],
-        # )
+        modeling_lambda_rule = events.Rule(
+            scope=self,
+            id="modeling-lambda-rule",
+            schedule=events.Schedule.cron(minute="0", hour="14"),
+            targets=[event_targets.LambdaFunction(handler=heathbot_lambda)],
+        )
