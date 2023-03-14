@@ -51,6 +51,7 @@ def get_discord_token():
 
     # Decrypts secret using the associated KMS key.
     secret = get_secret_value_response["SecretString"]
+    print(secret)
     return secret
 
 
