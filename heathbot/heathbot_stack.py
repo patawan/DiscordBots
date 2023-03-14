@@ -31,14 +31,14 @@ class HeathbotStack(Stack):
         )
 
         # lambda function posts heathcliff comic
-        # heathbot_lambda = _lambda.DockerImageFunction(
-        #     scope=self,
-        #     id="heathbot-lambda",
-        #     code=_lambda.DockerImageCode.from_image_asset(directory="heathbot/lambda/"),
-        #     role=heathbot_lambda_role,
-        #     memory_size=(1024),
-        #     timeout=Duration.minutes(15),
-        # )
+        heathbot_lambda = _lambda.DockerImageFunction(
+            scope=self,
+            id="heathbot-lambda",
+            code=_lambda.DockerImageCode.from_image_asset(directory="heathbot/lambda/"),
+            role=heathbot_lambda_role,
+            memory_size=(1024),
+            timeout=Duration.minutes(15),
+        )
 
         # # lambda on cron to post daily
         # modeling_lambda_rule = events.Rule(
