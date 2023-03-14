@@ -45,4 +45,4 @@ async def post_to_discord(url_to_post):
 def post_new_comic(event, context):
     comic_url = generate_url()
     todays_image = get_new_comic(comic_url)
-    asyncio(post_to_discord(todays_image))
+    asyncio.run(post_to_discord(todays_image))
