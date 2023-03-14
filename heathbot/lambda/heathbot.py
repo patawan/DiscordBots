@@ -22,7 +22,7 @@ def get_new_comic(url: str) -> str:
     soup = BeautifulSoup(r.content, "html.parser")
     # get picture url page
 
-    url_object = soup.find_all(
+    url_object = soup.find(
         "img", attrs={"src": re.compile("https:\/\/assets\.amuniversal\.com/[\w]+")}
     )
     image_url = url_object["src"]
