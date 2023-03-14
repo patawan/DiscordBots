@@ -6,6 +6,7 @@ import requests
 from datetime import date
 import re
 import asyncio
+import boto3
 
 
 def generate_url(base_url="https://www.gocomics.com/heathcliff") -> str:
@@ -31,9 +32,34 @@ def get_new_comic(url: str) -> str:
     return image_url
 
 
-async def post_to_discord(url_to_post):
+def get_discord_token():
+    from botocore.exceptions import ClientError
+
+    secret_name = "heathbot_token"
+    region_name = "us-east-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(service_name="secretsmanager", region_name=region_name)
+
+    try:
+        get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    # Decrypts secret using the associated KMS key.
+    secret = get_secret_value_response["SecretString"]
+    return secret
+
+
+async def post_to_discord(token, url_to_post):
     intents = discord.Intents.default()
     client = discord.Client(intents=intents)
+    await client.login(
+        token=token
+    )
     channel = client.get_channel(12324234183172)
     async with aiohttp.ClientSession() as session:
         async with session.get(url_to_post) as resp:
@@ -46,4 +72,5 @@ async def post_to_discord(url_to_post):
 def post_new_comic(event, context):
     comic_url = generate_url()
     todays_image = get_new_comic(comic_url)
-    asyncio.run(post_to_discord(todays_image))
+    heathbot_token = get_discord_token()
+    asyncio.run(post_to_discord(token=heathbot_token, url_to_post=todays_image))
