@@ -32,7 +32,8 @@ def get_new_comic(url: str) -> str:
 
 
 async def post_to_discord(url_to_post):
-    client = discord.Client()
+    intents = discord.Intents.default()
+    client = discord.Client(intents=intents)
     channel = client.get_channel(12324234183172)
     async with aiohttp.ClientSession() as session:
         async with session.get(url_to_post) as resp:
