@@ -7,6 +7,7 @@ from datetime import date
 import re
 import asyncio
 import boto3
+import json
 
 
 def generate_url(base_url="https://www.gocomics.com/heathcliff") -> str:
@@ -50,8 +51,8 @@ def get_discord_token():
         raise e
 
     # Decrypts secret using the associated KMS key.
-    secret = get_secret_value_response["SecretString"]["HEATHBOT_TOKEN"]
-    return secret
+    secret_dict = json.loads(get_secret_value_response["SecretString"])
+    return secret_dict["HEATHBOT_TOKEN"]
 
 
 async def post_to_discord(token, url_to_post):
