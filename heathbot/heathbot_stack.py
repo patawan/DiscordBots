@@ -27,8 +27,8 @@ class HeathbotStack(Stack):
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
                 iam.ManagedPolicy.from_aws_managed_policy_name("AWSLambda_FullAccess"),
-                iam.ManagedPolicy.from_aws_managed_policy_name(
-                    "AWSLambdaBasicExecutionRole"
+                iam.ManagedPolicy.from_managed_policy_arn(
+                    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
                 ),
             ],
         )
