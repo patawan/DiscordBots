@@ -42,7 +42,7 @@ class HeathbotStack(Stack):
             id="heathbot-lambda",
             code=_lambda.DockerImageCode.from_image_asset(directory="heathbot/lambda/"),
             role=heathbot_lambda_role,
-            memory_size=(4096),
+            memory_size=(1024),
             timeout=Duration.minutes(15),
         )
 
