@@ -5,7 +5,6 @@ import aiohttp
 import requests
 from datetime import date
 import re
-import asyncio
 import boto3
 import json
 
@@ -55,22 +54,30 @@ def get_discord_token():
     return secret_dict["HEATHBOT_TOKEN"]
 
 
-async def post_to_discord(token, url_to_post):
-    intents = discord.Intents.default()
-    client = discord.Client(intents=intents)
-    await client.login(token=token)
-    await client.wait_until_ready()
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
+heathbot_token = get_discord_token()
+
+
+@client.event
+async def on_ready():
+    print("Logged in & connected")
+    comic_url = generate_url()
+    print(comic_url)
+    todays_image = get_new_comic(comic_url)
+    print(todays_image)
     channel = client.get_channel(1083473604185960548)
+    print(channel)
     async with aiohttp.ClientSession() as session:
-        async with session.get(url_to_post) as resp:
+        async with session.get(todays_image) as resp:
             if resp.status != 200:
                 return await channel.send("Could not download file...")
             data = io.BytesIO(await resp.read())
             await channel.send(file=discord.File(data, "HEATHCLIFF_RULES.png"))
 
+    await client.close()
+
 
 def post_new_comic(event, context):
-    comic_url = generate_url()
-    todays_image = get_new_comic(comic_url)
-    heathbot_token = get_discord_token()
-    asyncio.run(post_to_discord(token=heathbot_token, url_to_post=todays_image))
+    discord_token = get_discord_token()
+    client.run(discord_token)
