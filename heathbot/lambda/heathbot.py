@@ -41,7 +41,7 @@ async def post_to_discord(url_to_post):
             await channel.send(file=discord.File(data, "HEATHCLIFF_RULES.png"))
 
 
-def post_new_comic():
+def post_new_comic(event, context):
     comic_url = generate_url()
     todays_image = get_new_comic(comic_url)
     post_to_discord(todays_image)
