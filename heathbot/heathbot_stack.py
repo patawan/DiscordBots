@@ -69,11 +69,10 @@ class HeathbotStack(Stack):
             id="start-execution",
             lambda_function=heathbot_schedule_lambda,
             # Lambda's result is in the attribute wait_time
-            result_path="$.wait_seconds"
         )
 
         wait_x = sfn.Wait(
-            scope=self, id="wait-time", time=sfn.WaitTime.seconds_path("$.wait_seconds")
+            scope=self, id="wait-time", time=sfn.WaitTime.seconds_path("$.Payload")
         )
 
         heathbot_post = tasks.LambdaInvoke(
