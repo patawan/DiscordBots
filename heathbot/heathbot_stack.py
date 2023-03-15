@@ -20,6 +20,18 @@ class HeathbotStack(Stack):
         config.read("heathbot/config.ini")
         # The code that defines your stack goes here
 
+        heathbot_sfn_role = iam.Role(
+            scope=self,
+            id="heathbot-sfn-role",
+            role_name="heathbot-sfn-role",
+            assumed_by=iam.ServicePrincipal("states.amazonaws.com"),
+            managed_policies=[
+                iam.ManagedPolicy.from_aws_managed_policy_name(
+                    "AWSStepFunctionsFullAccess"
+                )
+            ],
+        )
+
         # create iam role for running lambdas
         heathbot_lambda_role = iam.Role(
             scope=self,
@@ -82,30 +94,20 @@ class HeathbotStack(Stack):
             lambda_function=heathbot_post_lambda,
         )
 
-        heathbot_sfn_role = iam.Role(
-            scope=self,
-            id="heathbot-sfn-role",
-            role_name="heathbot-sfn-role",
-            assumed_by=iam.ServicePrincipal("states.amazonaws.com"),
-            managed_policies=[
-                iam.ManagedPolicy.from_aws_managed_policy_name("AWSStepFunctionsFullAccess")
-            ],
-        )
-
         sfn_definition = start_execution.next(wait_x).next(heathbot_post)
 
         heathbot_sfn = sfn.StateMachine(
             scope=self,
             id="heathbot-sfn",
             definition=sfn_definition,
-            role=heathbot_lambda_role,
+            role=heathbot_sfn_role,
         )
 
         # schedule sfn
         # runs at midnight AZ time every day
-        triggering_lambda_rule = events.Rule(
+        triggering_sfn_rule = events.Rule(
             scope=self,
-            id="schedule-lambda-rule",
+            id="schedule-sfn-rule",
             schedule=events.Schedule.cron(minute="0", hour="07"),
             targets=[
                 event_targets.SfnStateMachine(
