@@ -3,14 +3,15 @@ from bs4 import BeautifulSoup
 import io
 import aiohttp
 import requests
-from datetime import date
+from datetime import datetime
 import re
 import boto3
 import json
+import pytz
 
 
 def generate_url(base_url="https://www.gocomics.com/heathcliff") -> str:
-    today = date.today()
+    today = datetime.now(tz=pytz.timezone("US/Arizona"))
     year = today.year
     month = today.month
     day = today.day
