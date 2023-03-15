@@ -98,7 +98,7 @@ class HeathbotStack(Stack):
             schedule=events.Schedule.cron(minute="0", hour="07"),
             targets=[
                 event_targets.SfnStateMachine(
-                    machine=heathbot_sfn, role=heathbot_sfn.role
+                    machine=heathbot_sfn
                 )
             ],
         )
