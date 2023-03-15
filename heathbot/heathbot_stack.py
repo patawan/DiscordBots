@@ -82,6 +82,16 @@ class HeathbotStack(Stack):
             lambda_function=heathbot_post_lambda,
         )
 
+        heathbot_sfn_role = iam.Role(
+            scope=self,
+            id="heathbot-sfn-role",
+            role_name="heathbot-sfn-role",
+            assumed_by=iam.ServicePrincipal("states.amazonaws.com"),
+            managed_policies=[
+                iam.ManagedPolicy.from_aws_managed_policy_name("AWSStepFunctionsFullAccess")
+            ],
+        )
+
         sfn_definition = start_execution.next(wait_x).next(heathbot_post)
 
         heathbot_sfn = sfn.StateMachine(
@@ -99,7 +109,7 @@ class HeathbotStack(Stack):
             schedule=events.Schedule.cron(minute="0", hour="07"),
             targets=[
                 event_targets.SfnStateMachine(
-                    machine=heathbot_sfn, role=heathbot_lambda_role
+                    machine=heathbot_sfn, role=heathbot_sfn_role
                 )
             ],
         )
