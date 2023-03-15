@@ -20,18 +20,6 @@ class HeathbotStack(Stack):
         config.read("heathbot/config.ini")
         # The code that defines your stack goes here
 
-        heathbot_sfn_role = iam.Role(
-            scope=self,
-            id="heathbot-sfn-role",
-            role_name="heathbot-sfn-role",
-            assumed_by=iam.ServicePrincipal("states.amazonaws.com"),
-            managed_policies=[
-                iam.ManagedPolicy.from_aws_managed_policy_name(
-                    "AWSStepFunctionsFullAccess"
-                )
-            ],
-        )
-
         # create iam role for running lambdas
         heathbot_lambda_role = iam.Role(
             scope=self,
@@ -100,7 +88,6 @@ class HeathbotStack(Stack):
             scope=self,
             id="heathbot-sfn",
             definition=sfn_definition,
-            role=heathbot_sfn_role,
         )
 
         # schedule sfn
@@ -111,7 +98,7 @@ class HeathbotStack(Stack):
             schedule=events.Schedule.cron(minute="0", hour="07"),
             targets=[
                 event_targets.SfnStateMachine(
-                    machine=heathbot_sfn, role=heathbot_sfn_role
+                    machine=heathbot_sfn, role=heathbot_sfn.role
                 )
             ],
         )
