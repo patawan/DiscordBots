@@ -43,7 +43,7 @@ class HeathbotStack(Stack):
             scope=self,
             id="schedule-lambda",
             function_name="heathbot-schedule",
-            code=_lambda.Code.from_asset(directory="heathbot/lambda/schedule_change/"),
+            code=_lambda.Code.from_asset(path="heathbot/lambda/schedule_change/"),
             handler="schedule_change.change_schedule",
             runtime=_lambda.Runtime.PYTHON_3_8,
             role=heathbot_lambda_role,
