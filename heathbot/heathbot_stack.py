@@ -7,6 +7,7 @@ from aws_cdk import (
     aws_events_targets as event_targets,
     aws_stepfunctions as sfn,
     aws_stepfunctions_tasks as tasks,
+    aws_apigateway as gateway
 )
 from constructs import Construct
 import configparser
@@ -101,3 +102,10 @@ class HeathbotStack(Stack):
                 )
             ],
         )
+
+        # Begin heathbot response section
+
+        # api gateway to receive messages
+        # and route to lambda
+
+        # lambda to send message back
