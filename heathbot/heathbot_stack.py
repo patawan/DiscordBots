@@ -69,7 +69,7 @@ class HeathbotStack(Stack):
             id="start-execution",
             lambda_function=heathbot_schedule_lambda,
             # Lambda's result is in the attribute wait_time
-            output_path="$.wait_seconds",
+            result_path="$.wait_seconds"
         )
 
         wait_x = sfn.Wait(
