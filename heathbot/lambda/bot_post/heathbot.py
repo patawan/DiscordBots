@@ -26,7 +26,12 @@ def get_new_comic(url: str) -> str:
     # get picture url page
 
     url_object = soup.find(
-        "img", attrs={"src": re.compile("https:\/\/featureassets\.gocomics\.com/[\w]+")}
+        "img",
+        attrs={
+            "src": re.compile("https:\/\/featureassets\.gocomics\.com/[\w]+"),
+            "class": "Comic_comic__image__6e_Fw Comic_comic__image_isSkinny__NZ2aF",
+            "fetchpriority": "high",
+        },
     )
     image_url = url_object["src"]
 
