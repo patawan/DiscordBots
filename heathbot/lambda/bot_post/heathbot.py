@@ -8,6 +8,7 @@ import re
 import boto3
 import json
 import pytz
+import comics
 
 
 def generate_url(base_url="https://www.gocomics.com/heathcliff") -> str:
@@ -68,14 +69,16 @@ heathbot_token = get_discord_token()
 @client.event
 async def on_ready():
     print("Logged in & connected")
-    comic_url = generate_url()
+    # comic_url = generate_url()
+    # print(comic_url)
+    ch = comics.search("heathcliff", date=datetime.now(tz=pytz.timezone("US/Arizona")))
+    comic_url = ch.image_url
+    # todays_image = get_new_comic(comic_url)
     print(comic_url)
-    todays_image = get_new_comic(comic_url)
-    print(todays_image)
     channel = client.get_channel(1083473604185960548)
     print(channel)
     async with aiohttp.ClientSession() as session:
-        async with session.get(todays_image) as resp:
+        async with session.get(comic_url) as resp:
             if resp.status != 200:
                 return await channel.send("Could not download file...")
             data = io.BytesIO(await resp.read())
