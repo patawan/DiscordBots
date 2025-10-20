@@ -1,14 +1,43 @@
-FROM amazon/aws-lambda-python:3.12
+# Define function directory
+ARG FUNCTION_DIR="/function"
+
+FROM mcr.microsoft.com/playwright/python:v1.55.0-noble as build-image
+
+RUN apt-get update && \
+    apt-get install -y \
+    g++ \
+    make \
+    cmake \
+    unzip \
+    libcurl4-openssl-dev
+
+
+# Include global arg in this stage of the build
+ARG FUNCTION_DIR
+# Create function directory
+RUN mkdir -p ${FUNCTION_DIR}
 
 # Copy function code
-COPY heathbot.py ${LAMBDA_TASK_ROOT}
+COPY heathbot.py ${FUNCTION_DIR}
 
-# Install the function's dependencies using file requirements.txt
-# from your project folder.
+# Install the runtime interface client
+RUN pip3 install  \
+    --target ${FUNCTION_DIR} \
+    awslambdaric
 
 COPY lambda-requirements.txt  .
-RUN  pip3 install -r lambda-requirements.txt --target "${LAMBDA_TASK_ROOT}"
-RUN python -m playwright install --with-deps
+RUN  pip3 install -r lambda-requirements.txt --target ${FUNCTION_DIR}
 
-# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
+# Multi-stage build: grab a fresh copy of the base image
+FROM mcr.microsoft.com/playwright/python:v1.55.0-noble
+
+# Include global arg in this stage of the build
+ARG FUNCTION_DIR
+# Set working directory to function root directory
+WORKDIR ${FUNCTION_DIR}
+
+# Copy in the build image dependencies
+COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
+
+ENTRYPOINT [ "/usr/bin/python", "-m", "awslambdaric" ]
 CMD [ "heathbot.post_new_comic" ]
