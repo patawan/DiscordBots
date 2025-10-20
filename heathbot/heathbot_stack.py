@@ -45,7 +45,7 @@ class HeathbotStack(Stack):
             function_name="heathbot-schedule",
             code=_lambda.Code.from_asset(path="heathbot/lambda/schedule_change/"),
             handler="schedule_change.change_schedule",
-            runtime=_lambda.Runtime.PYTHON_3_8,
+            runtime=_lambda.Runtime.PYTHON_3_13,
             role=heathbot_lambda_role,
             memory_size=(128),
             timeout=Duration.minutes(3),
@@ -95,9 +95,5 @@ class HeathbotStack(Stack):
             scope=self,
             id="schedule-sfn-rule",
             schedule=events.Schedule.cron(minute="0", hour="07"),
-            targets=[
-                event_targets.SfnStateMachine(
-                    machine=heathbot_sfn
-                )
-            ],
+            targets=[event_targets.SfnStateMachine(machine=heathbot_sfn)],
         )

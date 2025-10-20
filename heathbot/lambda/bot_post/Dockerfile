@@ -1,4 +1,4 @@
-FROM amazon/aws-lambda-python:3.8
+FROM amazon/aws-lambda-python:3.13
 
 # Copy function code
 COPY heathbot.py ${LAMBDA_TASK_ROOT}

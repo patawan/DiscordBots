@@ -1,3 +1,4 @@
 discord.py==2.2.2
 pytz==2022.7.1
 comics==0.9.1
+playwright
