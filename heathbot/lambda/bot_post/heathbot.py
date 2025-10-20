@@ -1,42 +1,11 @@
 import discord
-from bs4 import BeautifulSoup
 import io
 import aiohttp
-import requests
 from datetime import datetime
-import re
 import boto3
 import json
 import pytz
 import comics
-
-
-def generate_url(base_url="https://www.gocomics.com/heathcliff") -> str:
-    today = datetime.now(tz=pytz.timezone("US/Arizona"))
-    year = today.year
-    month = today.month
-    day = today.day
-    comic_url = f"{base_url}/{year}/{month}/{day}"
-
-    return comic_url
-
-
-def get_new_comic(url: str) -> str:
-    r = requests.get(url)
-    soup = BeautifulSoup(r.content, "html.parser")
-    # get picture url page
-
-    url_object = soup.find(
-        "meta",
-        attrs={
-            "content": re.compile("https:\/\/featureassets\.gocomics\.com\/[\w]+"),
-            "property": "og:image",
-        },
-    )
-    print(url_object)
-    image_url = url_object["content"]
-
-    return image_url
 
 
 def get_discord_token():
@@ -69,8 +38,6 @@ heathbot_token = get_discord_token()
 @client.event
 async def on_ready():
     print("Logged in & connected")
-    # comic_url = generate_url()
-    # print(comic_url)
     ch = comics.search("heathcliff", date=datetime.now(tz=pytz.timezone("US/Arizona")))
     comic_url = ch.image_url
     # todays_image = get_new_comic(comic_url)
