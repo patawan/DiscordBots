@@ -38,7 +38,11 @@ heathbot_token = get_discord_token()
 @client.event
 async def on_ready():
     print("Logged in & connected")
-    ch = comics.search("heathcliff", date=datetime.now(tz=pytz.timezone("US/Arizona")))
+    ch = comics.search(
+        "heathcliff",
+        date=datetime.now(tz=pytz.timezone("US/Arizona")),
+        force_playwright=True,
+    )
     comic_url = ch.image_url
     # todays_image = get_new_comic(comic_url)
     print(comic_url)
