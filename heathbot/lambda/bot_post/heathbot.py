@@ -2,7 +2,6 @@ import discord
 import io
 import aiohttp
 from datetime import datetime
-import boto3
 import json
 import pytz
 import comics
