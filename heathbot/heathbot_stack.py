@@ -45,7 +45,7 @@ class HeathbotStack(Stack):
             function_name="heathbot-schedule",
             code=_lambda.Code.from_asset(path="heathbot/lambda/schedule_change/"),
             handler="schedule_change.change_schedule",
-            runtime=_lambda.Runtime.PYTHON_3_13,
+            runtime=_lambda.Runtime.PYTHON_3_12,
             role=heathbot_lambda_role,
             memory_size=(128),
             timeout=Duration.minutes(3),

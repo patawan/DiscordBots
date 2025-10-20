@@ -45,9 +45,6 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE }}
           role-session-name: github-deploy-role
           aws-region: us-east-1
-      - name: rebootstrap
-        run: |
-          cdk bootstrap aws://${{ secrets.AWS_ACCOUNT_ID }}/us-east-1
       - name: run synth
         run: |
           cdk synth
